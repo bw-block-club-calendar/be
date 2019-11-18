@@ -12,6 +12,7 @@ const { validateUser } = require("./authHelpers.js");
 // validateUser helper will also query for existing users with the requested username or email
 // validateUser returns a boolean "isSuccessful" which is "true" for no errors
 // valudateUser returns an array "errors" with a message for each failed validation
+
 router.post("/register", (req, res) => {
   let user = req.body;
   // always validate the data before sending it to the db
@@ -24,10 +25,21 @@ router.post("/register", (req, res) => {
     
         Auth.add(user)
           .then(saved => {
-            res.status(201).json(saved);
+            // 2: produce a token
+            const token = getJwtToken(saved);
+
+            // 3: send the token to the client
+            res.status(201).json({
+              message: `Welcome ${saved.username}! have a token...`,
+              token
+            });
           })
-          .catch(error => {
-            res.status(500).json(error);
+          .catch(err => {
+            console.log("error from Auth.add", err);
+            res.status(500).json({
+              message: `Error adding the user to database.`,
+              error: err.toString()
+            })
           });
       } else {
         // console.log(validateResult);
@@ -37,8 +49,11 @@ router.post("/register", (req, res) => {
         });
       }
     })
-    .catch(error => {
-      res.status(500).json(error)
+    .catch(err => {
+      res.status(500).json({
+        message: `Error adding the user to database.`,
+        error: err.toString()
+      })
     });
 });
 
@@ -50,7 +65,6 @@ router.post("/login", (req, res) => {
     .then(user => {
       if (user && bcrypt.compareSync(password, user.password)) {
         // 2: produce a token
-        console.log(user);
         const token = getJwtToken(user);
 
         // 3: send the token to the client
