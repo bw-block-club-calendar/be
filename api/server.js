@@ -4,6 +4,8 @@ const helmet = require('helmet') // third-party secure middleware
 const logger = require('./logger.js'); // custom logger middleware
 // const requiresAuth = require('./api/requires-auth-middleware.js');
 
+const authRouter = require('../auth/authRouter.js');
+
 const server = express();
 
 // middeware
@@ -16,7 +18,7 @@ server.use(cors());
 
 // routes
 
-
+server.use("/api/auth", logger('authRouter call'), authRouter);
 
 server.get('/', logger('root api call'), (req, res) => {
   res.status(200).json({ api: "Block Club Calendar API running"})

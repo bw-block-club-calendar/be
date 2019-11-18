@@ -9,10 +9,10 @@ module.exports = {
     },
     useNullAsDefault: true,
     migrations: {
-      directory: './data/dev/migrations'
+      directory: './data/migrations'
     },
     seeds: {
-      directory: './data/dev/seeds'
+      directory: './data/seeds'
     },
     // needed when using foreign keys
     pool: {
@@ -45,19 +45,13 @@ module.exports = {
   },
 
   production: {
-    client: 'postgresql',
-    connection: {
-      database: 'my_db',
-      user:     'username',
-      password: 'password'
-    },
-    pool: {
-      min: 2,
-      max: 10
-    },
+    client: 'pg',
+    connection: process.env.DATABASE_URL,
     migrations: {
-      tableName: 'knex_migrations'
-    }
+      directory: './data/migations'
+    },
+    seeds: {
+      directory: './data/seeds'
+    },
   }
-
 };

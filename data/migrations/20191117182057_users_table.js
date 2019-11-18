@@ -15,7 +15,8 @@ exports.up = function(knex) {
       .unique();
 
     users.string('type', 32)
-      .notNullable();
+      .notNullable()
+      .defaultTo('user');
 
     // define a Foreign Key
     users.integer('profile_id') // foreign key to profile table
