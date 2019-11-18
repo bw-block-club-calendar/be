@@ -6,28 +6,40 @@ const Auth = require("./authModel.js");
 const { validateUser } = require("./authHelpers.js");
 
 // for endpoints beginning with /api/auth
+
+// register a new user
+// validateUser helper is an async function that will check for valid username, password, email
+// validateUser helper will also query for existing users with the requested username or email
+// validateUser returns a boolean "isSuccessful" which is "true" for no errors
+// valudateUser returns an array "errors" with a message for each failed validation
 router.post("/register", (req, res) => {
   let user = req.body;
   // always validate the data before sending it to the db
-  const validateResult = validateUser(user);
-
-  if (validateResult.isSuccessful === true) {
-    const hash = bcrypt.hashSync(user.password, 10); // 2 ^ n
-    user.password = hash;
-
-    Auth.add(user)
-      .then(saved => {
-        res.status(201).json(saved);
-      })
-      .catch(error => {
-        res.status(500).json(error);
-      });
-  } else {
-    res.status(400).json({
-      message: "Invalid information about the user, see errors for details",
-      errors: validateResult.errors
+  validateUser(user)
+    .then(result => {
+      console.log(result);
+      if (result.isSuccessful === true) {
+        const hash = bcrypt.hashSync(user.password, 10); // 2 ^ n
+        user.password = hash;
+    
+        Auth.add(user)
+          .then(saved => {
+            res.status(201).json(saved);
+          })
+          .catch(error => {
+            res.status(500).json(error);
+          });
+      } else {
+        // console.log(validateResult);
+        res.status(400).json({
+          message: "Invalid information about the user, see errors for details",
+          errors: result.errors
+        });
+      }
+    })
+    .catch(error => {
+      res.status(500).json(error)
     });
-  }
 });
 
 router.post("/login", (req, res) => {
