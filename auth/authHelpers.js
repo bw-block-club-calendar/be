@@ -9,24 +9,23 @@ const Auth = require("./authModel.js");
 // validateUser helper will also query for existing users with the requested username or email
 // validateUser returns a boolean "isSuccessful" which is "true" for no errors
 // valudateUser returns an array "errors" with a message for each failed validation
+
 async function validateUser(user) {
   let errors = [];
 
+  const emailTest = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+
   await Auth.findBy({ username: user.username })
     .then(results => {
-      // console.log("results from username query", results);
       if (results[0]) {
         errors.push("That username is taken")
-        // console.log(errors);
       }
     })
 
   await Auth.findBy({ email: user.email })
     .then(results => {
-      // console.log("result from email query", results);
       if (results[0]) {
         errors.push("That email is taken")
-        // console.log(user);
       }
     })
 
@@ -38,7 +37,9 @@ async function validateUser(user) {
     errors.push("Please include a password with at least 4 characters");
   }
 
-  // console.log(errors);
+  if (!emailTest.test(user.email)) {
+    errors.push("Please include a valid email");
+  }
 
   return {
     isSuccessful: errors.length > 0 ? false : true,
