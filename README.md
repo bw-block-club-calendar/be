@@ -398,3 +398,294 @@ HTTP/1.1 404 NOT FOUND
   "message": "User with requested id is not found in database"
 }
 ```
+
+# Organization
+
+## Create organization
+
+	POST /api/organization/
+
+### Description and Constraints
+
+Logged in users create a organization associated with their account
+
+### HTTP Request Parameters
+
+| Name       | Type       | Description                    | Constraints   | 
+|------------|------------|--------------------------------|---------------|
+| user_id    | integer		|   Logged in user's id 			   | Required      |
+| name       | String	  	|   Organization's name					 | Unique        |
+| org_phone  | String	  	|   Organization's phone number	 |               |
+| org_email  | String	  	|   Organization's email address |               |
+| location   | Object	  	|   Location object  						 |               |
+
+### Location Object Parameters
+
+| Name              | Type     | Description                    | Constraints   | 
+|-------------------|----------|------------------------------- |---------------|
+| name              | String	 |   Name of location 						|               |
+| coordinates       | String	 |   Map API coordindates         |               |
+| street_address    | String	 |   First line of street address |               |
+| street_address_2  | String 	 |   Second line of address       |               |
+| city              | String 	 |   City name                    |               |
+| zipcode           | String 	 |   zipcode                      |               |
+| state             | String 	 |   state or province            |               |
+
+### Success Response
+
+Success-Response:
+
+```
+ HTTP/1.1 201 CREATED
+{
+  "user_id": 6,
+  "username": "testUser",
+  "organization": {
+    id: ,
+    name: ,
+    org_phone: ,
+    org_email: ,
+    location: {
+      id: ,
+      name: ,
+      coordinates: ,
+      street_address: ,
+      street_address_2: ,
+      city: ,
+      zipcode: ,
+      state: ,
+    }
+  }
+}
+```
+### Error Response
+
+User not authenticaed
+
+```
+HTTP/1.1 401 UNAUTHORIZED
+{
+  "message": "Invalid credentials"
+}
+```
+
+## See all organizations
+
+	GET /api/organization/
+
+### Description and Constraints
+
+Logged in users can see all organizations in the database
+
+### Success Response
+
+Success-Response:
+
+```
+ HTTP/1.1 200 OK
+[
+  {
+    "organization": {
+      id: ,
+      name: ,
+      org_phone: ,
+      org_email: ,
+      location: {
+        id: ,
+        name: ,
+        coordinates: ,
+        street_address: ,
+        street_address_2: ,
+        city: ,
+        zipcode: ,
+        state: ,
+      }
+    }
+  },
+  {
+    "organization": {
+      id: ,
+      name: ,
+      org_phone: ,
+      org_email: ,
+      location: {
+        id: ,
+        name: ,
+        coordinates: ,
+        street_address: ,
+        street_address_2: ,
+        city: ,
+        zipcode: ,
+        state: ,
+      }
+    }
+  },
+]
+```
+### Error Response
+
+User not authenticated
+
+```
+HTTP/1.1 401 UNAUTHORIZED
+{
+  "message": "Invalid credentials"
+}
+```
+
+## See organization by id
+
+	GET /api/organization/:id
+
+### Description and Constraints
+
+Logged in users can see any organization by id.
+
+### Success Response
+
+Success-Response:
+
+```
+ HTTP/1.1 200 OK
+[
+  {
+    "organization": {
+      id: ,
+      name: ,
+      org_phone: ,
+      org_email: ,
+      location: {
+        id: ,
+        name: ,
+        coordinates: ,
+        street_address: ,
+        street_address_2: ,
+        city: ,
+        zipcode: ,
+        state: ,
+      }
+    }
+  }
+]
+```
+### Error Response
+
+User not authenticated
+Logged in user requesting profile other than their own
+
+```
+HTTP/1.1 401 UNAUTHORIZED
+{
+  "message": "Invalid credentials"
+}
+```
+
+Organization with requested id is not in database
+
+```
+HTTP/1.1 404 NOT FOUND
+{
+  "message": "Organization with requested id is not found in database"
+}
+```
+
+## Update an organization
+
+	PUT /api/organization/:id
+
+### Description and Constraints
+
+Logged in users can update their own organization.
+Logged in administrators can update any organization by id.
+
+### Success Response
+
+Success-Response:
+
+```
+ HTTP/1.1 200 OK
+[
+  {
+    "user_id": 1,
+    "username": "testReadme",
+    "organization": {
+      id: ,
+      name: ,
+      org_phone: ,
+      org_email: ,
+      location: {
+        id: ,
+        name: ,
+        coordinates: ,
+        street_address: ,
+        street_address_2: ,
+        city: ,
+        zipcode: ,
+        state: ,
+      }
+    }
+  },
+]
+```
+
+### Error Response
+
+User not authenticated
+
+```
+HTTP/1.1 401 UNAUTHORIZED
+{
+  "message": "Invalid credentials"
+}
+```
+
+Organization with requested id is not in database
+
+```
+HTTP/1.1 404 NOT FOUND
+{
+  "message": "Organization with requested id is not found in database"
+}
+```
+
+## Delete an organization
+
+	DEL /api/organization/:id
+
+### Description and Constraints
+
+Logged in users can update delete own organization.
+Logged in administrators can delete any organization by id.
+
+### Success Response
+
+Success-Response:
+
+```
+ HTTP/1.1 200 OK
+{
+  "user_id": id,
+  "organization_id": id,
+  "message": "Organization deleted"
+}
+```
+### Error Response
+
+User not authenticated
+Logged in user deleting organization other than their own
+
+```
+HTTP/1.1 401 UNAUTHORIZED
+{
+  "message": "Invalid credentials"
+}
+```
+
+Organization with requested id is not in database
+
+```
+HTTP/1.1 404 NOT FOUND
+{
+  "message": "Organization with requested id is not found in database"
+}
+```
