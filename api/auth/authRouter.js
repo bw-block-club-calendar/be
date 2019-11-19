@@ -2,7 +2,7 @@ const router = require("express").Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken"); //1:  npm i jsonwebtoken
 
-const Auth = require("./authModel.js");
+const Auth = require("../user/userModel.js");
 const { validateRegister } = require("./authHelpers.js");
 
 // for endpoints beginning with /api/auth
