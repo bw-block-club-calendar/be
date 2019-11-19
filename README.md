@@ -8,15 +8,15 @@ API for Block Club Calendar
 
 - [Profile](#profile)
 	- [Create profile](#create-profile)
-	- [See all profiles](#see-all-profiles)
-	- [See profile by id](#see-profile-by-id)
+	- [Get all profiles](#get-all-profiles)
+	- [Get own profile](#get-profile-by-id)
 	- [Update profile](#update-profile)
 	- [Delete profile](#delete-profile)
   
 - [Organization](#organization)
 	- [Create organization](#create-organization)
-	- [See all organizations](#see-all-organizations)
-	- [See organization by id](#see-organization-by-id)
+	- [Get all organizations](#get-all-organizations)
+	- [Get organization by id](#get-organization-by-id)
 	- [Update organization](#update-organization)
 	- [Delete organization](#delete-organization)
 
@@ -137,6 +137,24 @@ Logged in users create a profile associated with their account
 | zipcode           | String 	 |   zipcode                      |               |
 | state             | String 	 |   state or province            |               |
 
+### Example request body
+```
+{
+  "user_id": 2,
+  "first_name": "Test",
+  "last_name": "User",
+	"location": {
+    "name": "testUser's House",
+    "coordinates": null,
+    "street_address": "7432 Brush St",
+    "street_address_2": null,
+    "city": "Detroit",
+    "zipcode": "48202",
+    "state": "MI"
+	}
+}
+```
+
 ### Success Response
 
 Success-Response:
@@ -144,21 +162,22 @@ Success-Response:
 ```
  HTTP/1.1 201 CREATED
 {
-  "user_id": 6,
+  "user_id": 2,
   "username": "testUser",
   "profile": {
-    id: ,
-    first_name: ,
-    last_name: ,
-    location: {
-      id: ,
-      name: ,
-      coordinates: ,
-      street_address: ,
-      street_address_2: ,
-      city: ,
-      zipcode: ,
-      state: ,
+    "id": 13,
+    "first_name": "Test",
+    "last_name": "User",
+    "location_id": 19,
+    "location": {
+      "id": 19,
+      "name": "testUser's House",
+      "coordinates": null,
+      "street_address": "7432 Brush St",
+      "street_address_2": null,
+      "city": "Detroit",
+      "zipcode": "48202",
+      "state": "MI"
     }
   }
 }
@@ -170,11 +189,11 @@ User not authenticaed
 ```
 HTTP/1.1 401 UNAUTHORIZED
 {
-  "message": "Invalid credentials"
+  "message": "Invalid credentials (must be own profile)"
 }
 ```
 
-## See all profiles
+## Get all profiles
 
 	GET /api/profile/
 
@@ -190,42 +209,16 @@ Success-Response:
  HTTP/1.1 200 OK
 [
   {
-    "user_id": 1,
-    "username": "testReadme",
-    "profile": {
-      id: ,
-      first_name: ,
-      last_name: ,
-      location: {
-        id: ,
-        name: ,
-        coordinates: ,
-        street_address: ,
-        street_address_2: ,
-        city: ,
-        zipcode: ,
-        state: ,
-      }
-    }
+    "id": 1,
+    "first_name": "Test",
+    "last_name": "Readme",
+    "location_id": null
   },
   {
-    "user_id": 2,
-    "username": "testReadme2",
-    "profile": {
-      id: ,
-      first_name: ,
-      last_name: ,
-      location: {
-        id: ,
-        name: ,
-        coordinates: ,
-        street_address: ,
-        street_address_2: ,
-        city: ,
-        zipcode: ,
-        state: ,
-      }
-    }
+    "id": 2,
+    "first_name": "Test",
+    "last_name": "User",
+    "location_id": 1
   },
 ]
 ```
@@ -240,14 +233,13 @@ HTTP/1.1 401 UNAUTHORIZED
 }
 ```
 
-## See profile by id
+## Get own profile
 
-	GET /api/profile/:id
+	GET /api/profile/own
 
 ### Description and Constraints
 
 Logged in users can see their own profile.
-Logged in administrators can see any profile by id.
 
 ### Success Response
 
@@ -255,46 +247,35 @@ Success-Response:
 
 ```
  HTTP/1.1 200 OK
-[
-  {
-    "user_id": 1,
-    "username": "testReadme",
-    "profile": {
-      id: ,
-      first_name: ,
-      last_name: ,
-      location: {
-        id: ,
-        name: ,
-        coordinates: ,
-        street_address: ,
-        street_address_2: ,
-        city: ,
-        zipcode: ,
-        state: ,
-      }
+{
+  "user_id": 2,
+  "username": "testUser",
+  "profile": {
+    "id": 2,
+    "first_name": "Test",
+    "last_name": "User",
+    "location_id": 21,
+    "location": {
+      "id": 21,
+      "name": "testUser's House",
+      "coordinates": null,
+      "street_address": "7432 Brush St",
+      "street_address_2": null,
+      "city": "Detroit",
+      "zipcode": "48202",
+      "state": "MI"
     }
-  },
-]
+  }
+}
 ```
 ### Error Response
 
 User not authenticated
-Logged in user requesting profile other than their own
 
 ```
 HTTP/1.1 401 UNAUTHORIZED
 {
   "message": "Invalid credentials"
-}
-```
-
-User with requested id is not in database
-
-```
-HTTP/1.1 404 NOT FOUND
-{
-  "message": "User with requested id is not found in database"
 }
 ```
 
@@ -363,7 +344,6 @@ HTTP/1.1 404 NOT FOUND
 
 ### Description and Constraints
 
-Logged in users can update delete own profile.
 Logged in administrators can delete any profile by id.
 
 ### Success Response
@@ -381,7 +361,6 @@ Success-Response:
 ### Error Response
 
 User not authenticated
-Logged in user requesting profile other than their own
 
 ```
 HTTP/1.1 401 UNAUTHORIZED

@@ -10,18 +10,18 @@ module.exports = {
 };
 
 function find() {
-  return db('users').select('id', 'username', 'email', 'type');
+  return db('profiles').select('*');
 }
 
 function findBy(filter) {
-  return db('users')
+  return db('profiles')
     .select('*')
     .where(filter);
 }
 
-function add(user) {
-  return db('users')
-    .insert(user, 'id')
+function add(profile) {
+  return db('profiles')
+    .insert(profile, 'id')
     .then(ids => {
       const [id] = ids;
       return findById(id);
@@ -29,20 +29,20 @@ function add(user) {
 }
 
 function findById(id) {
-  return db('users')
+  return db('profiles')
     .select('*')
     .where({ id })
     .first();
 }
 
 function update(changes, id){
-    return db('users')
+    return db('profiles')
         .where({ id: id})
         .update(changes);
 }
 
 function remove(id){
-    return db('users')
+    return db('profiles')
         .where({ id: id })
         .del();
 }
