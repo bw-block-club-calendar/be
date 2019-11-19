@@ -3,7 +3,7 @@ module.exports = {
   // validateLogin
 };
 
-const Auth = require("./authModel.js");
+const Users = require("../user/userModel.js");
 
 // validateUser helper checks the user object from the "api/auth/register" endpoint
 // validateUser is an async function that will check for valid username, password, email
@@ -17,14 +17,14 @@ async function validateRegister(user) {
   const errors = [];
   const emailTest = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
 
-  await Auth.findBy({ username: user.username })
+  await Users.findBy({ username: user.username })
     .then(results => {
       if (results[0]) {
         errors.push("That username is taken")
       }
     })
 
-  await Auth.findBy({ email: user.email })
+  await Users.findBy({ email: user.email })
     .then(results => {
       if (results[0]) {
         errors.push("That email is taken")

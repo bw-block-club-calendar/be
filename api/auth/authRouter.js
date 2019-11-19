@@ -2,16 +2,16 @@ const router = require("express").Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken"); //1:  npm i jsonwebtoken
 
-const Auth = require("./authModel.js");
+const Auth = require("../user/userModel.js");
 const { validateRegister } = require("./authHelpers.js");
 
 // for endpoints beginning with /api/auth
 
 // register a new user
-// validateUser helper is an async function that will check for valid username, password, email
-// validateUser helper will also query for existing users with the requested username or email
-// validateUser returns a boolean "isSuccessful" which is "true" for no errors
-// valudateUser returns an array "errors" with a message for each failed validation
+// validateRegister helper is an async function that will check for valid username, password, email
+// validateRegister helper will also query for existing users with the requested username or email
+// validateRegister returns a boolean "isSuccessful" which is "true" for no errors
+// validateRegister returns an array "errors" with a message for each failed validation
 
 router.post("/register", (req, res) => {
   let user = req.body;
