@@ -3,10 +3,8 @@
 module.exports = {
 
   development: {
-    client: 'sqlite3',
-    connection: {
-      filename: './data/dev/database.db3'
-    },
+    client: 'pg',
+    connection: 'postgres://localhost/bcc-dev',
     useNullAsDefault: true,
     migrations: {
       directory: './data/migrations'
@@ -14,19 +12,13 @@ module.exports = {
     seeds: {
       directory: './data/seeds'
     },
-    // needed when using foreign keys
-    pool: {
-      afterCreate: (conn, done) => {
-        // runs after a connection is made to the sqlite engine
-        conn.run('PRAGMA foreign_keys = ON', done); // turn on FK enforcement
-      },
-    }
   },
 
   testing: {
-    client: 'sqlite3',
+    client: 'pg',
     connection: {
-      filename: './data/testing/test.db3'
+      host : 'localhost',
+      database: 'bcc_test'
     },
     useNullAsDefault: true,
     migrations: {
@@ -35,21 +27,15 @@ module.exports = {
     seeds: {
       directory: './data/testing/seeds'
     },
-    // needed when using foreign keys
-    pool: {
-      afterCreate: (conn, done) => {
-        // runs after a connection is made to the sqlite engine
-        conn.run('PRAGMA foreign_keys = ON', done); // turn on FK enforcement
-      },
-    }
   },
 
   production: {
     client: 'pg',
     connection: process.env.DATABASE_URL,
     migrations: {
-      directory: './data/migations'
+      directory: './data/migrations'
     },
+    useNullAsDefault: true,
     seeds: {
       directory: './data/seeds'
     },

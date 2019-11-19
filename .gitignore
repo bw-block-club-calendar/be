@@ -109,3 +109,4 @@ READMEexample.md
 # SQLite Databases]
 data/dev/database.db3
 data/testing/test.db3
+data/.DS_Store
