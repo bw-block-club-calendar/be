@@ -41,7 +41,8 @@ Missing required parameters
 ```
 HTTP/1.1 400
 {
-  "message": "Please send username and password"
+  "message": "Invalid credentials"
+  ]
 }
 ```
 ## Register new user
@@ -74,11 +75,18 @@ Success-Response:
 ```
 ### Error Response
 
-Missing required parameters
+Missing required parameters, duplicate username, duplicate email
 
 ```
 HTTP/1.1 400
 {
-  "message": "Please send username and password"
+  "message": "Invalid information about the user, see errors for details",
+  "errors": [
+    "Username must contain at least 2 characters",
+    "Password must contain at least 4 characters",
+    "Email must be valid",
+    "That username is taken",
+    "That email is taken"
+  ]
 }
 ```

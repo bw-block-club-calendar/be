@@ -1,5 +1,6 @@
 module.exports = {
-  validateUser
+  validateRegister,
+  // validateLogin
 };
 
 const Auth = require("./authModel.js");
@@ -10,9 +11,10 @@ const Auth = require("./authModel.js");
 // validateUser returns a boolean "isSuccessful" which is "true" for no errors
 // valudateUser returns an array "errors" with a message for each failed validation
 
-async function validateUser(user) {
-  let errors = [];
 
+async function validateRegister(user) {
+
+  const errors = [];
   const emailTest = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
 
   await Auth.findBy({ username: user.username })
@@ -29,20 +31,40 @@ async function validateUser(user) {
       }
     })
 
-  if (!user.username || user.username.length < 2) {
-    errors.push("Please include a username with at least 2 characters");
-  }
-
-  if (!user.password || user.password.length < 4) {
-    errors.push("Please include a password with at least 4 characters");
-  }
-
-  if (!emailTest.test(user.email)) {
-    errors.push("Please include a valid email");
-  }
+    if (!user.username || user.username.length < 2) {
+      errors.push("Username must contain at least 2 characters");
+    }
+  
+    if (!user.password || user.password.length < 4) {
+      errors.push("Password must contain at least 4 characters");
+    }
+  
+    if (!emailTest.test(user.email)) {
+      errors.push("Email must be vaid");
+    }
 
   return {
     isSuccessful: errors.length > 0 ? false : true,
     errors
   };
 }
+
+// function validateLogin(user) {
+//   return (req, res, next) => {
+//     let errorStack = req.errorStack || { isSuccessful: false, errors: [] };
+//     const emailTest = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+  
+//     if (!user.username || user.username.length < 2) {
+//       errors.push("Username must contain at least 2 characters");
+//     }
+  
+//     if (!user.password || user.password.length < 4) {
+//       errors.push("Password must contain at least 4 characters");
+//     }
+  
+//     req.errorStack.isSuccessful = errorStack.errors.length > 0 ? false : true ;
+//     req.errorStack.errors = errorStack.errors;
+
+//     next();
+//   }
+// }
