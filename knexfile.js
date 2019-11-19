@@ -4,7 +4,10 @@ module.exports = {
 
   development: {
     client: 'pg',
-    connection: 'postgres://localhost/bcc-dev',
+    connection: {
+      host : 'localhost',
+      database: 'bcc_dev'
+    },
     useNullAsDefault: true,
     migrations: {
       directory: './data/migrations'

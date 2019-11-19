@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken"); //1:  npm i jsonwebtoken
 
 const Auth = require("./authModel.js");
-const { validateUser } = require("./authHelpers.js");
+const { validateRegister } = require("./authHelpers.js");
 
 // for endpoints beginning with /api/auth
 
@@ -16,7 +16,7 @@ const { validateUser } = require("./authHelpers.js");
 router.post("/register", (req, res) => {
   let user = req.body;
   // always validate the data before sending it to the db
-  validateUser(user)
+  validateRegister(user)
     .then(result => {
       console.log(result);
       if (result.isSuccessful === true) {
@@ -30,7 +30,9 @@ router.post("/register", (req, res) => {
 
             // 3: send the token to the client
             res.status(201).json({
-              message: `Welcome ${saved.username}! have a token...`,
+              id: saved.id,
+              username: saved.username,
+              email: saved.email,
               token
             });
           })
@@ -65,11 +67,13 @@ router.post("/login", (req, res) => {
     .then(user => {
       if (user && bcrypt.compareSync(password, user.password)) {
         // 2: produce a token
-        const token = getJwtToken(user);
+        const token = getJwtToken(user); // functioned defined below
 
         // 3: send the token to the client
         res.status(200).json({
-          message: `Welcome ${user.username}! have a token...`,
+          id: user.id,
+          username: user.username,
+          email: user.email,
           token
         });
       } else {
