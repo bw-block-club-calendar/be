@@ -65,6 +65,7 @@ function addProfile(req, res, next) {
 function getOwnProfile(req, res, next) {
   // decodedJwt contains user object from register or login
   const user = req.decodedJwt;
+  console.log("req.decodedJwt", req.decodedJwt);
 
   Profiles.findById(user.profile_id)
     .then(profile => {
