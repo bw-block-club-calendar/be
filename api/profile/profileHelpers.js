@@ -69,6 +69,7 @@ function getOwnProfile(req, res, next) {
   Profiles.findById(user.profile_id)
     .then(profile => {
       req.ownProfile = profile;
+      console.log("req.ownProfile", req.ownProfile);
       next();
     })
     .catch(err => {
