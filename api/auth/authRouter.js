@@ -65,7 +65,7 @@ router.post("/login", (req, res) => {
     .then(user => {
       if (user && bcrypt.compareSync(password, user.password)) {
         // 2: produce a token
-        const token = getJwtToken(user);
+        const token = getJwtToken(user); // functioned defined below
 
         // 3: send the token to the client
         res.status(200).json({
