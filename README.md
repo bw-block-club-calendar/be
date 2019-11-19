@@ -7,18 +7,18 @@ API for Block Club Calendar
 	- [Register new user](#register-new-user)
 
 - [Profile](#profile)
-	- [Create new profile](#add-profile)
-	- [See all profiles](#get-profile)
-	- [See profile by id](#get-id-profile)
-	- [Update a profile](#update-profile)
-	- [Delete a profile](#delete-profile)
+	- [Create profile](#create-profile)
+	- [See all profiles](#see-all-profiles)
+	- [See profile by id](#see-profile-by-id)
+	- [Update profile](#update-profile)
+	- [Delete profile](#delete-profile)
   
 - [Organization](#organization)
-	- [Create new organization](#add-organization)
-	- [See all organizations](#get-organization)
-	- [See organization by id](#get-id-organization)
-	- [Update an organization](#update-organization)
-	- [Delete an organization](#delete-organization)
+	- [Create organization](#create-organization)
+	- [See all organizations](#see-all-organizations)
+	- [See organization by id](#see-organization-by-id)
+	- [Update organization](#update-organization)
+	- [Delete organization](#delete-organization)
 
 # Auth
 
@@ -298,7 +298,7 @@ HTTP/1.1 404 NOT FOUND
 }
 ```
 
-## Update a profile
+## Update profile
 
 	PUT /api/profile/:id
 
@@ -357,7 +357,7 @@ HTTP/1.1 404 NOT FOUND
 }
 ```
 
-## Delete a profile
+## Delete profile
 
 	DEL /api/profile/:id
 
@@ -589,7 +589,7 @@ HTTP/1.1 404 NOT FOUND
 }
 ```
 
-## Update an organization
+## Update organization
 
 	PUT /api/organization/:id
 
@@ -648,7 +648,7 @@ HTTP/1.1 404 NOT FOUND
 }
 ```
 
-## Delete an organization
+## Delete organization
 
 	DEL /api/organization/:id
 
