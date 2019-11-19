@@ -4,7 +4,7 @@ const helmet = require('helmet') // third-party secure middleware
 const logger = require('./logger.js'); // custom logger middleware
 // const requiresAuth = require('./api/requires-auth-middleware.js');
 
-const authRouter = require('../auth/authRouter.js');
+const authRouter = require('./auth/authRouter.js');
 
 const server = express();
 
