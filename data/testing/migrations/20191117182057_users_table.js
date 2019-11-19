@@ -15,7 +15,8 @@ exports.up = function(knex) {
       .unique();
 
     users.string('type', 32)
-      .notNullable();
+      .notNullable()
+      .defaultTo('user');
   });
 };
 
