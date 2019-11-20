@@ -7,7 +7,7 @@ const Users = require("../user/userModel.js")
 const restrictAdmin = require('../restrictAdminMiddleware.js'); // require admin type on decodedJwt
 const { verifyNoProfile, verifyOwnProfile, 
   addProfile, getOwnProfile } = require("./profileHelpers.js");
-const { addLocation, getOwnLocation } = require("../location/locationHelpers.js");
+const { addLocation, getOwnProfileLocation } = require("../location/locationHelpers.js");
 
 router.post("/",
   verifyNoProfile, // verifyNoProfile ensures the user has not created one yet ? next : 403
@@ -57,7 +57,7 @@ router.get('/', restrictAdmin, (req, res) => {
 
 router.get('/own', 
   getOwnProfile, // getOwnProfile looksup your profile_id, adds to req.ownProfile
-  getOwnLocation, // getOwnLocation looks up your location_id, adds to req.ownProfile.location
+  getOwnProfileLocation, // getOwnProfileLocation looks up your location_id, adds to req.ownProfile.location
   (req, res) => {
     const user = req.decodedJwt;
     res.status(200).json({

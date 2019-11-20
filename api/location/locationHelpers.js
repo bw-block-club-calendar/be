@@ -1,6 +1,6 @@
 module.exports = {
   addLocation,
-  getOwnLocation
+  getOwnProfileLocation
 };
 
 const Locations = require("./locationModel.js");
@@ -24,7 +24,7 @@ function addLocation(req, res, next) {
     });
 }
 
-function getOwnLocation(req, res, next) {
+function getOwnProfileLocation(req, res, next) {
   const profile = req.ownProfile;
 
   if (!profile) {
