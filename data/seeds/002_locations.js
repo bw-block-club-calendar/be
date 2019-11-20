@@ -6,7 +6,6 @@ exports.seed = function(knex) {
       // Inserts seed entries
       return knex('locations').insert([
         {
-          id: 1,
           name: 'Michigan Urban Farming Initiative',
           coordinates: null,
           street_address: '7432 Brush St',
@@ -16,7 +15,6 @@ exports.seed = function(knex) {
           zipcode: '48202',
         },
         {
-          id: 2,
           name: 'Metropolitain United Methodist Church',
           coordinates: null,
           street_address: '8000 Woodward Ave',
@@ -26,7 +24,6 @@ exports.seed = function(knex) {
           zipcode: '48202',
         },
         {
-          id: 3,
           name: 'Bamboo Detroit',
           coordinates: null,
           street_address: '1420 Washington Blvd',
@@ -36,7 +33,6 @@ exports.seed = function(knex) {
           zipcode: '48226',
         },
         {
-          id: 4,
           name: null,
           coordinates: null,
           street_address: '320 Horton St',

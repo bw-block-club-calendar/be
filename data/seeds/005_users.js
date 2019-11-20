@@ -6,7 +6,6 @@ exports.seed = function(knex) {
       // Inserts seed entries
       return knex('users').insert([
         {
-          id: 1,
           username: 'testAdmin',
           password: '$2a$10$2J1LWmTQBRYiFYmev0rGTeWgzCLpGISsHP58Ut4gNh1C3UqIZDEAW',
           email: 'test@gmail.com',
@@ -15,7 +14,6 @@ exports.seed = function(knex) {
           organization_id: null,
         },
         {
-          id: 2,
           username: 'testUser',
           password: '$2a$10$brKZ85JDKxThPUS/qqWZHOQc.Y2nDaprHTIt1gx9fBB3qA9TIL7vy',
           email: 'test2@gmail.com',
@@ -24,7 +22,6 @@ exports.seed = function(knex) {
           organization_id: null,
         },
         {
-          id: 3,
           username: 'jlgelinas',
           password: '$2a$10$brKZ85JDKxThPUS/qqWZHOQc.Y2nDaprHTIt1gx9fBB3qA9TIL7vy',
           email: 'jlgelinas@gmail.com',
@@ -33,7 +30,6 @@ exports.seed = function(knex) {
           organization_id: null,
         },
         {
-          id: 4,
           username: 'tysongersh',
           password: '$2a$10$brKZ85JDKxThPUS/qqWZHOQc.Y2nDaprHTIt1gx9fBB3qA9TIL7vy',
           email: 'tysongersh@miufi.org',

@@ -6,14 +6,12 @@ exports.seed = function(knex) {
       // Inserts seed entries
       return knex('organizations').insert([
         {
-          id: 1,
           name: 'Michigan Urban Farming Initiative',
           org_phone: '5558675309',
           org_email: 'support@miufi.org',
           location_id: 1,
         },
         {
-          id: 2,
           name: 'Bamboo Detroit',
           org_phone: '3137660134',
           org_email: 'terri@bamboodetroit.com',
