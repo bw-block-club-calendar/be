@@ -16,6 +16,7 @@ API for Block Club Calendar
 - [Organization](#organization)
 	- [Create organization](#create-organization)
 	- [Get all organizations](#get-all-organizations)
+	- [Get own organization](#get-own-organization)
 	- [Get organization by id](#get-organization-by-id)
 	- [Update organization](#update-organization)
 	- [Delete organization](#delete-organization)
@@ -138,6 +139,9 @@ Logged in users create a profile associated with their account
 | state             | String 	 |   state or province            |               |
 
 ### Example request body
+
+Example request:
+
 ```
 {
   "user_id": 2,
@@ -185,11 +189,18 @@ Success-Response:
 ### Error Response
 
 User not authenticaed
-
 ```
 HTTP/1.1 401 UNAUTHORIZED
 {
   "message": "Invalid credentials (must be own profile)"
+}
+```
+
+User has already created profile
+
+``` HTTP/1.1 403 FORBIDDEN
+{
+  "message": "User has previously created profile, use PUT"
 }
 ```
 
@@ -410,6 +421,28 @@ Logged in users create a organization associated with their account
 | zipcode           | String 	 |   zipcode                      |               |
 | state             | String 	 |   state or province            |               |
 
+### Example Request Body
+
+Example request:
+
+```
+{
+  "user_id": 9,
+  "name": "New TechTown Detroit",
+  "org_phone": "3138795250",
+	"org_emal": "info@techtowndetroit.org",
+	"location": {
+    "name": "TechTown Detroit",
+    "coordinates": null,
+    "street_address": "440 Burroughs St",
+    "street_address_2": null,
+    "city": "Detroit",
+    "zipcode": "48202",
+    "state": "MI"
+	}
+}
+```
+
 ### Success Response
 
 Success-Response:
@@ -417,22 +450,23 @@ Success-Response:
 ```
  HTTP/1.1 201 CREATED
 {
-  "user_id": 6,
-  "username": "testUser",
+  "user_id": 9,
+  "username": "testUser12",
   "organization": {
-    id: ,
-    name: ,
-    org_phone: ,
-    org_email: ,
-    location: {
-      id: ,
-      name: ,
-      coordinates: ,
-      street_address: ,
-      street_address_2: ,
-      city: ,
-      zipcode: ,
-      state: ,
+    "id": 9,
+    "name": "New TechTown Detroit",
+    "org_phone": "3138795250",
+    "org_email": null,
+    "location_id": 23,
+    "location": {
+      "id": 23,
+      "name": "TechTown Detroit",
+      "coordinates": null,
+      "street_address": "440 Burroughs St",
+      "street_address_2": null,
+      "city": "Detroit",
+      "zipcode": "48202",
+      "state": "MI"
     }
   }
 }
@@ -448,7 +482,15 @@ HTTP/1.1 401 UNAUTHORIZED
 }
 ```
 
-## See all organizations
+User has already created profile
+
+``` HTTP/1.1 403 FORBIDDEN
+{
+  "message": "User has previously created profile, use PUT"
+}
+```
+
+## Get all organizations
 
 	GET /api/organization/
 
@@ -464,41 +506,19 @@ Success-Response:
  HTTP/1.1 200 OK
 [
   {
-    "organization": {
-      id: ,
-      name: ,
-      org_phone: ,
-      org_email: ,
-      location: {
-        id: ,
-        name: ,
-        coordinates: ,
-        street_address: ,
-        street_address_2: ,
-        city: ,
-        zipcode: ,
-        state: ,
-      }
-    }
+    "id": 1,
+    "name": "TechTown Detroit",
+    "org_phone": "3138795250",
+    "org_email": null,
+    "location_id": 17
   },
   {
-    "organization": {
-      id: ,
-      name: ,
-      org_phone: ,
-      org_email: ,
-      location: {
-        id: ,
-        name: ,
-        coordinates: ,
-        street_address: ,
-        street_address_2: ,
-        city: ,
-        zipcode: ,
-        state: ,
-      }
-    }
-  },
+    "id": 2,
+    "name": "Bamboo Detroit",
+    "org_phone": "3137660134",
+    "org_email": "terri@bamboodetroit.com",
+    "location_id": 3
+  }
 ]
 ```
 ### Error Response
@@ -512,7 +532,54 @@ HTTP/1.1 401 UNAUTHORIZED
 }
 ```
 
-## See organization by id
+## Get own organization
+
+	GET /api/organization/own
+
+### Description and Constraints
+
+Logged in users can see their own organization.
+
+### Success Response
+
+Success-Response:
+
+```
+ HTTP/1.1 200 OK
+{
+  "user_id": 8,
+  "username": "testUser11",
+  "organization": {
+    "id": 3,
+    "name": "TechTown Detroit",
+    "org_phone": "3138795250",
+    "org_email": null,
+    "location_id": 17,
+    "location": {
+      "id": 17,
+      "name": "TechTown Detroit",
+      "coordinates": null,
+      "street_address": "440 Burroughs St",
+      "street_address_2": null,
+      "city": "Detroit",
+      "zipcode": "48202",
+      "state": "MI"
+    }
+  }
+}
+```
+### Error Response
+
+User not authenticated
+
+```
+HTTP/1.1 401 UNAUTHORIZED
+{
+  "message": "Invalid credentials"
+}
+```
+
+## Get organization by id
 
 	GET /api/organization/:id
 
@@ -526,26 +593,23 @@ Success-Response:
 
 ```
  HTTP/1.1 200 OK
-[
-  {
-    "organization": {
-      id: ,
-      name: ,
-      org_phone: ,
-      org_email: ,
-      location: {
-        id: ,
-        name: ,
-        coordinates: ,
-        street_address: ,
-        street_address_2: ,
-        city: ,
-        zipcode: ,
-        state: ,
-      }
-    }
+{
+  "id": 3,
+  "name": "TechTown Detroit",
+  "org_phone": "3138795250",
+  "org_email": null,
+  "location_id": 17,
+  "location": {
+    "id": 17,
+    "name": "TechTown Detroit",
+    "coordinates": null,
+    "street_address": "440 Burroughs St",
+    "street_address_2": null,
+    "city": "Detroit",
+    "zipcode": "48202",
+    "state": "MI"
   }
-]
+}
 ```
 ### Error Response
 

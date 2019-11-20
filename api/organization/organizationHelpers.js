@@ -42,8 +42,9 @@ function verifyOwnOrganization(req, res, next) {
 
 function addOrganization(req, res, next) {
   const newOrganization = {
-    first_name: req.body.first_name || null,
-    last_name: req.body.last_name || null,
+    name: req.body.name || null,
+    org_phone: req.body.org_phone || null,
+    org_email: req.body.org_email || null,
     location_id: req.newLocation.id
   }
 
