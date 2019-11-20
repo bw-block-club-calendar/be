@@ -69,6 +69,10 @@ router.get('/own',
     })
 });
 
+// TODO: router.put('/own')
 
+// TODO: router.del('/own')
+
+// TODO: router.del('/:id') admin only
 
 module.exports = router;

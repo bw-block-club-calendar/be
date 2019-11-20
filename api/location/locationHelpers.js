@@ -1,6 +1,7 @@
 module.exports = {
   addLocation,
-  getOwnProfileLocation
+  getOwnProfileLocation,
+  getOwnOrganizationLocation
 };
 
 const Locations = require("./locationModel.js");
@@ -43,5 +44,27 @@ function getOwnProfileLocation(req, res, next) {
       });
   } else {
     next(); // user.profile_id is null
+  }
+}
+
+function getOwnOrganizationLocation(req, res, next) {
+  const organization = req.ownOrganization;
+
+  if (!organization) {
+    next();
+  } else if (organization.location_id) {
+    Locations.findById(organization.location_id)
+      .then(location => {
+        req.ownOrganization.location = location;
+        next();
+      })
+      .catch(err => {
+        res.status(500).json({
+          message: `Error getting location from the database.`,
+          error: err.toString()
+        })
+      });
+  } else {
+    next(); // user.organization_id is null
   }
 }

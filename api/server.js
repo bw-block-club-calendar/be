@@ -9,6 +9,7 @@ const restrictAdmin = require('./restrictAdminMiddleware.js'); // require admin 
 const authRouter = require('./auth/authRouter.js');
 const locationRouter = require('./location/locationRouter.js');
 const profileRouter = require('./profile/profileRouter.js');
+const organizationRouter = require('./organization/organizationRouter.js');
 
 // create server instances
 const server = express();
@@ -38,6 +39,11 @@ server.use("/api/profile",
   logger('profileRouter call'), 
   restrictAuth, 
   profileRouter);
+
+  server.use("/api/organization",
+    logger('organizationRouter call'), 
+    restrictAuth, 
+    organizationRouter);
 
 
 
