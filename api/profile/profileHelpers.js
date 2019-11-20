@@ -65,17 +65,33 @@ function addProfile(req, res, next) {
 function getOwnProfile(req, res, next) {
   // decodedJwt contains user object from register or login
   const user = req.decodedJwt;
-  console.log("req.decodedJwt", req.decodedJwt);
+  // console.log(user);
 
-  Profiles.findById(user.profile_id)
-    .then(profile => {
-      req.ownProfile = profile;
-      console.log("req.ownProfile", req.ownProfile);
-      next();
+  Users.findById(user.id)
+    .then(userEntry => {
+      // console.log(userEntry);
+      if (userEntry.profile_id) {
+        // add profile to req.ownProfile
+        Profiles.findById(userEntry.profile_id)
+          .then(profile => {
+            // console.log(profile);
+            req.ownProfile = profile;
+            // console.log("req.ownProfile", req.ownProfile);
+            next();
+          })
+          .catch(err => {
+            res.status(500).json({
+              message: `Error getting profile from the database.`,
+              error: err.toString()
+            })
+          });
+      } else {
+        next(); // user.profile_id is null
+      }
     })
     .catch(err => {
       res.status(500).json({
-        message: `Error getting profile from the database.`,
+        message: `Error getting user's information from the database.`,
         error: err.toString()
       })
     });

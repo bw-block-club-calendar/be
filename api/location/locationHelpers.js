@@ -4,6 +4,7 @@ module.exports = {
 };
 
 const Locations = require("./locationModel.js");
+const Users = require("../user/userModel.js");
 
 function addLocation(req, res, next) {
   const newLocation = req.body.location || {};
@@ -26,15 +27,21 @@ function addLocation(req, res, next) {
 function getOwnLocation(req, res, next) {
   const profile = req.ownProfile;
 
-  Locations.findById(profile.location_id)
-    .then(location => {
-      req.ownProfile.location = location;
-      next();
-    })
-    .catch(err => {
-      res.status(500).json({
-        message: `Error getting location from the database.`,
-        error: err.toString()
+  if (!profile) {
+    next();
+  } else if (profile.location_id) {
+    Locations.findById(profile.location_id)
+      .then(location => {
+        req.ownProfile.location = location;
+        next();
       })
-    });
+      .catch(err => {
+        res.status(500).json({
+          message: `Error getting location from the database.`,
+          error: err.toString()
+        })
+      });
+  } else {
+    next(); // user.profile_id is null
+  }
 }
