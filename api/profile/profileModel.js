@@ -9,6 +9,15 @@ module.exports = {
   remove
 };
 
+function add(profile) {
+  return db('profiles')
+    .insert(profile, 'id')
+    .then(ids => {
+      const [id] = ids;
+      return findById(id);
+    });
+}
+
 function find() {
   return db('profiles').select('*');
 }
@@ -17,15 +26,6 @@ function findBy(filter) {
   return db('profiles')
     .select('*')
     .where(filter);
-}
-
-function add(profile) {
-  return db('profiles')
-    .insert(profile, 'id')
-    .then(ids => {
-      const [id] = ids;
-      return findById(id);
-    });
 }
 
 function findById(id) {

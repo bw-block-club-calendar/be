@@ -9,6 +9,7 @@ const restrictAdmin = require('../restrictAdminMiddleware.js'); // require admin
 const { oldVerifyOwnEvent, addEvent, getAllEvents, getOwnEvent,
   verifyOwnEvent, updateEvent } = require("./eventHelpers.js");
 const { addLocation, getOwnEventLocation } = require("../location/locationHelpers.js");
+const { confirmNoRsvp, addRsvp } = require('../rsvp/rsvpHelpers.js');
 
 router.post("/",
   restrictAuth, // restrictAuth verifies user is logged in
@@ -107,6 +108,19 @@ router.delete('/:id',
       });
 })
 
-// TODO: router.del('/:id') admin only
+// TODO: router.del('/:id') admin only for any event
+
+// RSVP endpoint
+
+router.post('/:id/rsvp',
+  restrictAuth,
+  confirmNoRsvp,
+  addRsvp,
+  (req, res) => {
+  let rsvp = req.newRsvp;
+  res.status(201).json({ message: "RSVP for event confirmed", rsvp })
+
+})
+
 
 module.exports = router;
