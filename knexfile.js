@@ -6,7 +6,7 @@ module.exports = {
     client: 'pg',
     connection: {
       host : 'localhost',
-      database: 'bcc_dev'
+      database: 'bcc_dev2'
     },
     useNullAsDefault: true,
     migrations: {

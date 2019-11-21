@@ -10,6 +10,7 @@ const authRouter = require('./auth/authRouter.js');
 const locationRouter = require('./location/locationRouter.js');
 const profileRouter = require('./profile/profileRouter.js');
 const organizationRouter = require('./organization/organizationRouter.js');
+const eventRouter = require('./event/eventRouter.js');
 
 // create server instances
 const server = express();
@@ -25,25 +26,32 @@ server.use(cors());
 
 // routes
 
+// routes accessible without token
 server.use("/api/auth",
   logger('authRouter call'),
   authRouter);
 
-server.use("/api/location",
-  logger('locationRouter call'), 
-  restrictAuth, 
-  restrictAdmin, 
-  locationRouter);
+server.use("/api/event",
+  logger('eventRouter call'), 
+  eventRouter);
 
+// authorized user restricted endpoints
 server.use("/api/profile",
   logger('profileRouter call'), 
   restrictAuth, 
   profileRouter);
 
-  server.use("/api/organization",
-    logger('organizationRouter call'), 
-    restrictAuth, 
-    organizationRouter);
+server.use("/api/organization",
+  logger('organizationRouter call'), 
+  restrictAuth, 
+  organizationRouter);
+
+// admin restricted endpoints
+server.use("/api/location",
+  logger('locationRouter call'), 
+  restrictAuth, 
+  restrictAdmin, 
+  locationRouter);
 
 
 

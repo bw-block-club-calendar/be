@@ -6,21 +6,27 @@ exports.up = function(knex) {
     // .increments() creates a primary key, integer without negative values (unsigned)
     tbl.increments(); // primary key automatically named 'id'
 
-    tbl.string('organizer_type', 32);
+    tbl.string('organizer_type', 32)
+      .notNullable();
 
-    tbl.string('title', 128);
+    tbl.string('title', 128)
+      .notNullable();
 
-    tbl.string('description', 255);
+    tbl.string('description', 255)
+      .notNullable();
 
-    tbl.string('start', 255);
+    tbl.string('start', 255)
+      .notNullable();
 
-    tbl.string('end', 255);
+    tbl.string('end', 255)
+      .notNullable();
 
     tbl.string('ext_link', 255);
 
     tbl.string('image', 255);
 
-    tbl.boolean('approved');
+    tbl.boolean('approved')
+      .defaultTo(false);
 
     // define a Foreign Key
     tbl.integer('user_id') // foreign key to user table

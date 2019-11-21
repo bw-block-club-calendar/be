@@ -764,7 +764,7 @@ Logged in users create an event associated with their profile or organization
 |----------------|------------|--------------------------------|------------------|
 | user_id        | integer		|   Creator's user id 			     | Required         |
 | organizer_type | String	   	|   "profile" or "organization"  | Required         |
-| title          | String	  	|   Event's title     					 | Unique, Required |
+| title          | String	  	|   Event's title     					 | Required         |
 | description    | String	  	|   Description of event      	 | Required         |
 | start          | String	  	|   ISO 8601  start date & time  | Required         |
 | end            | String	  	|   ISO 8601  end date & time    | Required         |
@@ -791,7 +791,7 @@ Example request:
 ```
 {
   "user_id": 9,
-  "organizer": "profile",
+  "organizer_type": "profile",
   "title": "Councilperson Sheffield's Town Hall",
   "description": "Join Council President Pro Tem Sheffield and the City Assessor for an in depth discussion on Neighborhood Enterprise Zones and what they mean to you!",
   "start": "Tue Oct 22 2019 18:00:00 GMT-0400 (Eastern Daylight Time)",
@@ -817,17 +817,15 @@ Success-Response:
 ```
  HTTP/1.1 201 CREATED
 {
+  "event_id": 7,
   "organizer_user_id": 9,
-  "organizer_type": "profile"
-  "event": {
-    "id": 7,
-    "title": "Councilperson Sheffield's Town Hall",
-    "description": "Join Council President Pro Tem Sheffield and the City Assessor for an in depth discussion on Neighborhood Enterprise Zones and what they mean to you!",
-    "start": "Tue Oct 22 2019 18:00:00 GMT-0400 (Eastern Daylight Time)",
-    "end": "Tue Oct 22 2019 20:00:00 GMT-0400 (Eastern Daylight Time)",
-    "ext_link": "https://detroitmi.gov/",
-    "image": "https://detroitmi.gov/sites/detroitmi.localhost/files/2018-11/Mary-Sheffield.jpg",
-  }
+  "organizer_type": "profile",
+  "title": "Councilperson Sheffield's Town Hall",
+  "description": "Join Council President Pro Tem Sheffield and the City Assessor for an in depth discussion on Neighborhood Enterprise Zones and what they mean to you!",
+  "start": "Tue Oct 22 2019 18:00:00 GMT-0400 (Eastern Daylight Time)",
+  "end": "Tue Oct 22 2019 20:00:00 GMT-0400 (Eastern Daylight Time)",
+  "ext_link": "https://detroitmi.gov/",
+  "image": "https://detroitmi.gov/sites/detroitmi.localhost/files/2018-11/Mary-Sheffield.jpg",
 	"location": {
     "id": 14
     "name": "Metropolitain United Methodist Church",
@@ -842,6 +840,14 @@ Success-Response:
 ```
 ### Error Response
 
+Missing required fields
+
+``` HTTP/1.1 400 BAD REQUEST
+{
+  "message": "User has previously created profile, use PUT"
+}
+```
+
 User not authenticaed
 
 ```
@@ -853,19 +859,13 @@ HTTP/1.1 401 UNAUTHORIZED
 
 User has already created profile
 
-``` HTTP/1.1 403 FORBIDDEN
-{
-  "message": "User has previously created profile, use PUT"
-}
-```
+## Get all events
 
-## Get all organizations
-
-	GET /api/organization/
+	GET /api/event/
 
 ### Description and Constraints
 
-Logged in users can see all organizations in the database
+Anyone can see all events sorted by start date in the database
 
 ### Success Response
 
@@ -875,67 +875,117 @@ Success-Response:
  HTTP/1.1 200 OK
 [
   {
-    "id": 1,
-    "name": "TechTown Detroit",
-    "org_phone": "3138795250",
-    "org_email": null,
-    "location_id": 17
-  },
-  {
-    "id": 2,
-    "name": "Bamboo Detroit",
-    "org_phone": "3137660134",
-    "org_email": "terri@bamboodetroit.com",
-    "location_id": 3
-  }
-]
-```
-### Error Response
-
-User not authenticated
-
-```
-HTTP/1.1 401 UNAUTHORIZED
-{
-  "message": "Invalid credentials"
-}
-```
-
-## Get own organization
-
-	GET /api/organization/own
-
-### Description and Constraints
-
-Logged in users can see their own organization.
-
-### Success Response
-
-Success-Response:
-
-```
- HTTP/1.1 200 OK
-{
-  "user_id": 8,
-  "username": "testUser11",
-  "organization": {
-    "id": 3,
-    "name": "TechTown Detroit",
-    "org_phone": "3138795250",
-    "org_email": null,
-    "location_id": 17,
+    "event_id": 2,
+    "user_id": 4,
+    "organizer_type": "organization",
+    "title": "Trunk-or-Treat with the Lower North End Block Club",
+    "description": "Bring your friends and family to enjoy a night of fright on the Michigan Urban Farming Initiative's Campus! There will be handy, hot dog roasting, and a Zombie Walk for the kids.",
+    "start": "2019-10-31T18:00:00-0500",
+    "end": "2019-10-31T20:00:00-0500",
+    "ext_link": null,
+    "image": "https://i.ibb.co/hK3St7F/LNE-TOT.png",
+    "approved": true,
     "location": {
-      "id": 17,
-      "name": "TechTown Detroit",
+      "id": 1,
+      "name": "Michigan Urban Farming Initiative",
       "coordinates": null,
-      "street_address": "440 Burroughs St",
+      "street_address": "7432 Brush St",
       "street_address_2": null,
       "city": "Detroit",
       "zipcode": "48202",
       "state": "MI"
     }
-  }
-}
+  },
+  {
+    "event_id": 1,
+    "user_id": 3,
+    "organizer_type": "profile",
+    "title": "Councilperson Sheffield Town Hall",
+    "description": "Join Council President Pro Tem Sheffield and the City Assessor for an in depth discussion on Neighborhood Enterprise Zones and what they mean to you!",
+    "start": "2019-11-21T18:00:00-0500",
+    "end": "2019-11-21T20:00:00-0500",
+    "ext_link": "https://detroitmi.gov",
+    "image": "https://detroitmi.gov/themes/custom/detroitmi/logo.png",
+    "approved": true,
+    "location": {
+      "id": 2,
+      "name": "Metropolitain United Methodist Church",
+      "coordinates": null,
+      "street_address": "8000 Woodward Ave",
+      "street_address_2": null,
+      "city": "Detroit",
+      "zipcode": "48202",
+      "state": "MI"
+    }
+  },
+]
+```
+### Error Response
+
+No possible client errors
+
+## Get own events
+
+	GET /api/event/own
+
+### Description and Constraints
+
+Logged in users can see the events they have created.
+
+### Success Response
+
+Success-Response:
+
+```
+ HTTP/1.1 200 OK
+{
+
+[
+  {
+    "event_id": 2,
+    "user_id": 4,
+    "organizer_type": "organization",
+    "title": "Trunk-or-Treat with the Lower North End Block Club",
+    "description": "Bring your friends and family to enjoy a night of fright on the Michigan Urban Farming Initiative's Campus! There will be handy, hot dog roasting, and a Zombie Walk for the kids.",
+    "start": "2019-10-31T18:00:00-0500",
+    "end": "2019-10-31T20:00:00-0500",
+    "ext_link": null,
+    "image": "https://i.ibb.co/hK3St7F/LNE-TOT.png",
+    "approved": true,
+    "location": {
+      "id": 1,
+      "name": "Michigan Urban Farming Initiative",
+      "coordinates": null,
+      "street_address": "7432 Brush St",
+      "street_address_2": null,
+      "city": "Detroit",
+      "zipcode": "48202",
+      "state": "MI"
+    }
+  },
+  {
+    "event_id": 1,
+    "user_id": 4,
+    "organizer_type": "profile",
+    "title": "Councilperson Sheffield Town Hall",
+    "description": "Join Council President Pro Tem Sheffield and the City Assessor for an in depth discussion on Neighborhood Enterprise Zones and what they mean to you!",
+    "start": "2019-11-21T18:00:00-0500",
+    "end": "2019-11-21T20:00:00-0500",
+    "ext_link": "https://detroitmi.gov",
+    "image": "https://detroitmi.gov/themes/custom/detroitmi/logo.png",
+    "approved": true,
+    "location": {
+      "id": 2,
+      "name": "Metropolitain United Methodist Church",
+      "coordinates": null,
+      "street_address": "8000 Woodward Ave",
+      "street_address_2": null,
+      "city": "Detroit",
+      "zipcode": "48202",
+      "state": "MI"
+    }
+  },
+]}
 ```
 ### Error Response
 
@@ -948,13 +998,13 @@ HTTP/1.1 401 UNAUTHORIZED
 }
 ```
 
-## Get organization by id
+## Get event by id
 
-	GET /api/organization/:id
+	GET /api/event/:id
 
 ### Description and Constraints
 
-Logged in users can see any organization by id.
+Anyone can see any event by id.
 
 ### Success Response
 
@@ -962,17 +1012,23 @@ Success-Response:
 
 ```
  HTTP/1.1 200 OK
+
 {
-  "id": 3,
-  "name": "TechTown Detroit",
-  "org_phone": "3138795250",
-  "org_email": null,
-  "location_id": 17,
+  "event_id": 2,
+  "user_id": 4,
+  "organizer_type": "organization",
+  "title": "Trunk-or-Treat with the Lower North End Block Club",
+  "description": "Bring your friends and family to enjoy a night of fright on the Michigan Urban Farming Initiative's Campus! There will be handy, hot dog roasting, and a Zombie Walk for the kids.",
+  "start": "2019-10-31T18:00:00-0500",
+  "end": "2019-10-31T20:00:00-0500",
+  "ext_link": null,
+  "image": "https://i.ibb.co/hK3St7F/LNE-TOT.png",
+  "approved": true,
   "location": {
-    "id": 17,
-    "name": "TechTown Detroit",
+    "id": 1,
+    "name": "Michigan Urban Farming Initiative",
     "coordinates": null,
-    "street_address": "440 Burroughs St",
+    "street_address": "7432 Brush St",
     "street_address_2": null,
     "city": "Detroit",
     "zipcode": "48202",
@@ -982,33 +1038,23 @@ Success-Response:
 ```
 ### Error Response
 
-User not authenticated
-Logged in user requesting profile other than their own
-
-```
-HTTP/1.1 401 UNAUTHORIZED
-{
-  "message": "Invalid credentials"
-}
-```
-
-Organization with requested id is not in database
+Event with requested id is not in database
 
 ```
 HTTP/1.1 404 NOT FOUND
 {
-  "message": "Organization with requested id is not found in database"
+  "message": "Event with requested id is not found in database"
 }
 ```
 
-## Update organization
+## Update event
 
-	PUT /api/organization/:id
+	PUT /api/event/:id
 
 ### Description and Constraints
 
-Logged in users can update their own organization.
-Logged in administrators can update any organization by id.
+Logged in users can update their own events by id.
+Logged in administrators can update any event by id.
 
 ### Success Response
 

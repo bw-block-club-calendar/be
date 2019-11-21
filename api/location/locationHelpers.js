@@ -1,7 +1,8 @@
 module.exports = {
   addLocation,
   getOwnProfileLocation,
-  getOwnOrganizationLocation
+  getOwnOrganizationLocation,
+  getOwnEventLocation
 };
 
 const Locations = require("./locationModel.js");
@@ -43,7 +44,7 @@ function getOwnProfileLocation(req, res, next) {
         })
       });
   } else {
-    next(); // user.profile_id is null
+    next(); // profile.location_id is null
   }
 }
 
@@ -65,6 +66,28 @@ function getOwnOrganizationLocation(req, res, next) {
         })
       });
   } else {
-    next(); // user.organization_id is null
+    next(); // organization.location_id is null
+  }
+}
+
+function getOwnEventLocation(req, res, next) {
+  const event = req.ownEvent;
+
+  if (!event) {
+    next();
+  } else if (event.location_id) {
+    Locations.findById(event.location_id)
+      .then(location => {
+        req.ownEvent.location = location;
+        next();
+      })
+      .catch(err => {
+        res.status(500).json({
+          message: `Error getting location from the database.`,
+          error: err.toString()
+        })
+      });
+  } else {
+    next(); // event.organization_id is null
   }
 }
