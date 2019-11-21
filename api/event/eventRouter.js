@@ -89,7 +89,23 @@ router.put('/:id',
   }
 )
 
-// TODO: router.del('/own')
+router.delete('/:id', 
+  restrictAuth,
+  verifyOwnEvent,
+  (req, res) => {
+    const { id } = req.params;
+
+    Events.remove(id)
+      .then(
+        res.status(200).json({ message: `Event with id ${id} deleted.`})
+      )
+      .catch(err => {
+        res.status(500).json({
+          message: `Error getting event from the database.`,
+          error: err.toString()
+        })
+      });
+})
 
 // TODO: router.del('/:id') admin only
 

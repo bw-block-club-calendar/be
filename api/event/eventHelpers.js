@@ -143,8 +143,8 @@ function verifyOwnEvent(req, res, next) {
       }
     })
     .catch(err => {
-      res.status(500).json({
-        message: `Error getting event from the database.`,
+      res.status(404).json({
+        message: `That event id is not in the database`,
         error: err.toString()
       })
     });
