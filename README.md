@@ -30,7 +30,7 @@ API for Block Club Calendar
 	- [Update event](#update-event)
 	- [Delete event](#delete-event)
   
-- [Event RSVP](#event-rsvp)
+- [RSVP](#rsvp)
 	- [Create RSVP](#create-rsvp)
 
 # Auth
@@ -854,8 +854,6 @@ HTTP/1.1 401 UNAUTHORIZED
 }
 ```
 
-User has already created profile
-
 ## Get all events
 
 	GET /api/event/
@@ -1189,5 +1187,77 @@ Organization with requested id is not in database
 HTTP/1.1 404 NOT FOUND
 {
   "message": "Organization with requested id is not found in database"
+}
+```
+
+
+# RSVP
+
+## Create RSVP
+
+	POST /api/event/:id/rsvp
+
+### Description and Constraints
+
+Logged in users can RSVP to attend an event
+
+### Example Request Body
+
+No message body required, send empty POST request to endpoint
+
+### Success Response
+
+Success-Response:
+
+```
+ HTTP/1.1 201 CREATED
+{
+  "event_id": 7,
+  "organizer_user_id": 9,
+  "organizer_type": "profile",
+  "title": "Councilperson Sheffield's Town Hall",
+  "description": "Join Council President Pro Tem Sheffield and the City Assessor for an in depth discussion on Neighborhood Enterprise Zones and what they mean to you!",
+  "start": "Tue Oct 22 2019 18:00:00 GMT-0400 (Eastern Daylight Time)",
+  "end": "Tue Oct 22 2019 20:00:00 GMT-0400 (Eastern Daylight Time)",
+  "ext_link": "https://detroitmi.gov/",
+  "image": "https://detroitmi.gov/sites/detroitmi.localhost/files/2018-11/Mary-Sheffield.jpg",
+	"location": {
+    "id": 14
+    "name": "Metropolitain United Methodist Church",
+    "coordinates": null,
+    "street_address": "8000 Woodward ave",
+    "street_address_2": null,
+    "city": "Detroit",
+    "zipcode": "48202",
+    "state": "MI"
+	}
+}
+```
+### Error Response
+
+User not authenticaed
+
+```
+HTTP/1.1 401 UNAUTHORIZED
+{
+  "message": "No credentials provided"
+}
+```
+
+User has already RSVP'd to event
+
+```
+HTTP/1.1 403 FORBIDDEN
+{
+  "message": "You have already RSVP'd for this event"
+}
+```
+
+Even does not exsit
+
+```
+HTTP/1.1 404 NOT FOUND
+{
+  "message": "An event with that id is not in our database"
 }
 ```
