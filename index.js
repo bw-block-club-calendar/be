@@ -1,4 +1,6 @@
-require("dotenv").config(); // npm i dontenv
+require('dotenv').config()
+
+// console.log(require('dotenv').config({debug: true}))
 
 const server = require('./api/server.js');
 
