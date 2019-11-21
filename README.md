@@ -20,6 +20,21 @@ API for Block Club Calendar
 	- [Get organization by id](#get-organization-by-id)
 	- [Update organization](#update-organization)
 	- [Delete organization](#delete-organization)
+  
+- [Event](#event)
+	- [Create event](#create-event)
+	- [Get all events](#get-all-events)
+	- [Get own events](#get-own-events)
+	- [Get event by id](#get-event-by-id)
+	- [Get event by query](#get-event-by-query)
+	- [Update event](#update-event)
+	- [Delete event](#delete-event)
+  
+- [Event RSVP](#event-rsvp)
+	- [Create RSVP](#create-rsvp)
+	- [Get RSVPs by event](#get-rsvp-by-event)
+	- [Get RSVPs by user](#get-rsvp-by-user)
+  - [Delete RSVP](#delete-rsvp)
 
 # Auth
 
@@ -469,6 +484,360 @@ Success-Response:
       "state": "MI"
     }
   }
+}
+```
+### Error Response
+
+User not authenticaed
+
+```
+HTTP/1.1 401 UNAUTHORIZED
+{
+  "message": "Invalid credentials"
+}
+```
+
+User has already created profile
+
+``` HTTP/1.1 403 FORBIDDEN
+{
+  "message": "User has previously created profile, use PUT"
+}
+```
+
+## Get all organizations
+
+	GET /api/organization/
+
+### Description and Constraints
+
+Logged in users can see all organizations in the database
+
+### Success Response
+
+Success-Response:
+
+```
+ HTTP/1.1 200 OK
+[
+  {
+    "id": 1,
+    "name": "TechTown Detroit",
+    "org_phone": "3138795250",
+    "org_email": null,
+    "location_id": 17
+  },
+  {
+    "id": 2,
+    "name": "Bamboo Detroit",
+    "org_phone": "3137660134",
+    "org_email": "terri@bamboodetroit.com",
+    "location_id": 3
+  }
+]
+```
+### Error Response
+
+User not authenticated
+
+```
+HTTP/1.1 401 UNAUTHORIZED
+{
+  "message": "Invalid credentials"
+}
+```
+
+## Get own organization
+
+	GET /api/organization/own
+
+### Description and Constraints
+
+Logged in users can see their own organization.
+
+### Success Response
+
+Success-Response:
+
+```
+ HTTP/1.1 200 OK
+{
+  "user_id": 8,
+  "username": "testUser11",
+  "organization": {
+    "id": 3,
+    "name": "TechTown Detroit",
+    "org_phone": "3138795250",
+    "org_email": null,
+    "location_id": 17,
+    "location": {
+      "id": 17,
+      "name": "TechTown Detroit",
+      "coordinates": null,
+      "street_address": "440 Burroughs St",
+      "street_address_2": null,
+      "city": "Detroit",
+      "zipcode": "48202",
+      "state": "MI"
+    }
+  }
+}
+```
+### Error Response
+
+User not authenticated
+
+```
+HTTP/1.1 401 UNAUTHORIZED
+{
+  "message": "Invalid credentials"
+}
+```
+
+## Get organization by id
+
+	GET /api/organization/:id
+
+### Description and Constraints
+
+Logged in users can see any organization by id.
+
+### Success Response
+
+Success-Response:
+
+```
+ HTTP/1.1 200 OK
+{
+  "id": 3,
+  "name": "TechTown Detroit",
+  "org_phone": "3138795250",
+  "org_email": null,
+  "location_id": 17,
+  "location": {
+    "id": 17,
+    "name": "TechTown Detroit",
+    "coordinates": null,
+    "street_address": "440 Burroughs St",
+    "street_address_2": null,
+    "city": "Detroit",
+    "zipcode": "48202",
+    "state": "MI"
+  }
+}
+```
+### Error Response
+
+User not authenticated
+Logged in user requesting profile other than their own
+
+```
+HTTP/1.1 401 UNAUTHORIZED
+{
+  "message": "Invalid credentials"
+}
+```
+
+Organization with requested id is not in database
+
+```
+HTTP/1.1 404 NOT FOUND
+{
+  "message": "Organization with requested id is not found in database"
+}
+```
+
+## Update organization
+
+	PUT /api/organization/:id
+
+### Description and Constraints
+
+Logged in users can update their own organization.
+Logged in administrators can update any organization by id.
+
+### Success Response
+
+Success-Response:
+
+```
+ HTTP/1.1 200 OK
+[
+  {
+    "user_id": 1,
+    "username": "testReadme",
+    "organization": {
+      id: ,
+      name: ,
+      org_phone: ,
+      org_email: ,
+      location: {
+        id: ,
+        name: ,
+        coordinates: ,
+        street_address: ,
+        street_address_2: ,
+        city: ,
+        zipcode: ,
+        state: ,
+      }
+    }
+  },
+]
+```
+
+### Error Response
+
+User not authenticated
+
+```
+HTTP/1.1 401 UNAUTHORIZED
+{
+  "message": "Invalid credentials"
+}
+```
+
+Organization with requested id is not in database
+
+```
+HTTP/1.1 404 NOT FOUND
+{
+  "message": "Organization with requested id is not found in database"
+}
+```
+
+## Delete organization
+
+	DEL /api/organization/:id
+
+### Description and Constraints
+
+Logged in users can update delete own organization.
+Logged in administrators can delete any organization by id.
+
+### Success Response
+
+Success-Response:
+
+```
+ HTTP/1.1 200 OK
+{
+  "user_id": id,
+  "organization_id": id,
+  "message": "Organization deleted"
+}
+```
+### Error Response
+
+User not authenticated
+Logged in user deleting organization other than their own
+
+```
+HTTP/1.1 401 UNAUTHORIZED
+{
+  "message": "Invalid credentials"
+}
+```
+
+Organization with requested id is not in database
+
+```
+HTTP/1.1 404 NOT FOUND
+{
+  "message": "Organization with requested id is not found in database"
+}
+```
+
+# Event
+
+## Create event
+
+	POST /api/event/
+
+### Description and Constraints
+
+Logged in users create an event associated with their profile or organization
+
+### HTTP Request Parameters
+
+| Name           | Type       | Description                    | Constraints      | 
+|----------------|------------|--------------------------------|------------------|
+| user_id        | integer		|   Creator's user id 			     | Required         |
+| organizer_type | String	   	|   "profile" or "organization"  | Required         |
+| title          | String	  	|   Event's title     					 | Unique, Required |
+| description    | String	  	|   Description of event      	 | Required         |
+| start          | String	  	|   ISO 8601  start date & time  | Required         |
+| end            | String	  	|   ISO 8601  end date & time    | Required         |
+| ext_link       | String	  	|   Link to external resource 	 |                  |
+| image          | String	  	|   Link to img resource      	 |                  |
+| location       | Object	  	|   Location object  						 | Required         |
+
+### Location Object Parameters
+
+| Name              | Type     | Description                    | Constraints   | 
+|-------------------|----------|------------------------------- |---------------|
+| name              | String	 |   Name of location 						|               |
+| coordinates       | String	 |   Map API coordindates         |               |
+| street_address    | String	 |   First line of street address |               |
+| street_address_2  | String 	 |   Second line of address       |               |
+| city              | String 	 |   City name                    |               |
+| zipcode           | String 	 |   zipcode                      |               |
+| state             | String 	 |   state or province            |               |
+
+### Example Request Body
+
+Example request:
+
+```
+{
+  "user_id": 9,
+  "organizer": "profile",
+  "title": "Councilperson Sheffield's Town Hall",
+  "description": "Join Council President Pro Tem Sheffield and the City Assessor for an in depth discussion on Neighborhood Enterprise Zones and what they mean to you!",
+  "start": "Tue Oct 22 2019 18:00:00 GMT-0400 (Eastern Daylight Time)",
+  "end": "Tue Oct 22 2019 20:00:00 GMT-0400 (Eastern Daylight Time)",
+  "ext_link": "https://detroitmi.gov/",
+  "image": "https://detroitmi.gov/sites/detroitmi.localhost/files/2018-11/Mary-Sheffield.jpg",
+	"location": {
+    "name": "Metropolitain United Methodist Church",
+    "coordinates": null,
+    "street_address": "8000 Woodward ave",
+    "street_address_2": null,
+    "city": "Detroit",
+    "zipcode": "48202",
+    "state": "MI"
+	}
+}
+```
+
+### Success Response
+
+Success-Response:
+
+```
+ HTTP/1.1 201 CREATED
+{
+  "organizer_user_id": 9,
+  "organizer_type": "profile"
+  "event": {
+    "id": 7,
+    "title": "Councilperson Sheffield's Town Hall",
+    "description": "Join Council President Pro Tem Sheffield and the City Assessor for an in depth discussion on Neighborhood Enterprise Zones and what they mean to you!",
+    "start": "Tue Oct 22 2019 18:00:00 GMT-0400 (Eastern Daylight Time)",
+    "end": "Tue Oct 22 2019 20:00:00 GMT-0400 (Eastern Daylight Time)",
+    "ext_link": "https://detroitmi.gov/",
+    "image": "https://detroitmi.gov/sites/detroitmi.localhost/files/2018-11/Mary-Sheffield.jpg",
+  }
+	"location": {
+    "id": 14
+    "name": "Metropolitain United Methodist Church",
+    "coordinates": null,
+    "street_address": "8000 Woodward ave",
+    "street_address_2": null,
+    "city": "Detroit",
+    "zipcode": "48202",
+    "state": "MI"
+	}
 }
 ```
 ### Error Response

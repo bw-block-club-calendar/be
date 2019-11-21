@@ -31,7 +31,9 @@ function verifyNoProfile(req, res, next) {
 function verifyOwnProfile(req, res, next) {
   // decodedJwt contains user object from register or login
   const user = req.decodedJwt;
-
+  console.log("request body to post profile", req.body);
+  console.log("request headers to post profile", req.headers);
+  console.log("decoded token", user);
   if (user.id === req.body.user_id) {
     // console.log("passed verifyOwnProfile");
     next();

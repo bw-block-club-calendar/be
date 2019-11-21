@@ -3,6 +3,8 @@ const jwt = require("jsonwebtoken"); //1:  npm i jsonwebtoken
 module.exports = (req, res, next) => {
   const token = req.headers.authorization;
 
+  console.log("request headers in auth middleware", req.headers)
+
   if (token) {
     const secret = process.env.JWT_SECRET || "is it secret, is it safe?";
 
