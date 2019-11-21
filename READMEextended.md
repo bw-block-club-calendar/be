@@ -17,11 +17,16 @@ API for Block Club Calendar
 	- [Create organization](#create-organization)
 	- [Get all organizations](#get-all-organizations)
 	- [Get own organization](#get-own-organization)
+	- [(Deprecated) Get organization by id](#get-organization-by-id)
+	- [(Deprecated) Update organization](#update-organization)
+	- [(Deprecated) Delete organization](#delete-organization)
   
 - [Event](#event)
 	- [Create event](#create-event)
 	- [Get all events](#get-all-events)
+	- [(Deprecated) Get own events](#get-own-events)
 	- [Get event by id](#get-event-by-id)
+	- [(Deprecated) Get event by query](#get-event-by-query)
 	- [Update event](#update-event)
 	- [Delete event](#delete-event)
   
@@ -586,6 +591,160 @@ HTTP/1.1 401 UNAUTHORIZED
 }
 ```
 
+## Get organization by id
+
+	GET /api/organization/:id
+
+### Description and Constraints
+
+Logged in users can see any organization by id.
+
+### Success Response
+
+Success-Response:
+
+```
+ HTTP/1.1 200 OK
+{
+  "id": 3,
+  "name": "TechTown Detroit",
+  "org_phone": "3138795250",
+  "org_email": null,
+  "location_id": 17,
+  "location": {
+    "id": 17,
+    "name": "TechTown Detroit",
+    "coordinates": null,
+    "street_address": "440 Burroughs St",
+    "street_address_2": null,
+    "city": "Detroit",
+    "zipcode": "48202",
+    "state": "MI"
+  }
+}
+```
+### Error Response
+
+User not authenticated
+Logged in user requesting profile other than their own
+
+```
+HTTP/1.1 401 UNAUTHORIZED
+{
+  "message": "Invalid credentials"
+}
+```
+
+Organization with requested id is not in database
+
+```
+HTTP/1.1 404 NOT FOUND
+{
+  "message": "Organization with requested id is not found in database"
+}
+```
+
+## Update organization
+
+	PUT /api/organization/:id
+
+### Description and Constraints
+
+Logged in users can update their own organization.
+Logged in administrators can update any organization by id.
+
+### Success Response
+
+Success-Response:
+
+```
+ HTTP/1.1 200 OK
+[
+  {
+    "user_id": 1,
+    "username": "testReadme",
+    "organization": {
+      id: ,
+      name: ,
+      org_phone: ,
+      org_email: ,
+      location: {
+        id: ,
+        name: ,
+        coordinates: ,
+        street_address: ,
+        street_address_2: ,
+        city: ,
+        zipcode: ,
+        state: ,
+      }
+    }
+  },
+]
+```
+
+### Error Response
+
+User not authenticated
+
+```
+HTTP/1.1 401 UNAUTHORIZED
+{
+  "message": "Invalid credentials"
+}
+```
+
+Organization with requested id is not in database
+
+```
+HTTP/1.1 404 NOT FOUND
+{
+  "message": "Organization with requested id is not found in database"
+}
+```
+
+## Delete organization
+
+	DEL /api/organization/:id
+
+### Description and Constraints
+
+Logged in users can update delete own organization.
+Logged in administrators can delete any organization by id.
+
+### Success Response
+
+Success-Response:
+
+```
+ HTTP/1.1 200 OK
+{
+  "user_id": id,
+  "organization_id": id,
+  "message": "Organization deleted"
+}
+```
+### Error Response
+
+User not authenticated
+Logged in user deleting organization other than their own
+
+```
+HTTP/1.1 401 UNAUTHORIZED
+{
+  "message": "Invalid credentials"
+}
+```
+
+Organization with requested id is not in database
+
+```
+HTTP/1.1 404 NOT FOUND
+{
+  "message": "Organization with requested id is not found in database"
+}
+```
+
 # Event
 
 ## Create event
@@ -760,6 +919,79 @@ Success-Response:
 
 No possible client errors
 
+## Get own events
+
+	GET /api/event/own
+
+### Description and Constraints
+
+Logged in users can see the events they have created.
+
+### Success Response
+
+Success-Response:
+
+```
+ HTTP/1.1 200 OK
+{
+
+[
+  {
+    "event_id": 2,
+    "user_id": 4,
+    "organizer_type": "organization",
+    "title": "Trunk-or-Treat with the Lower North End Block Club",
+    "description": "Bring your friends and family to enjoy a night of fright on the Michigan Urban Farming Initiative's Campus! There will be handy, hot dog roasting, and a Zombie Walk for the kids.",
+    "start": "2019-10-31T18:00:00-0500",
+    "end": "2019-10-31T20:00:00-0500",
+    "ext_link": null,
+    "image": "https://i.ibb.co/hK3St7F/LNE-TOT.png",
+    "approved": true,
+    "location": {
+      "id": 1,
+      "name": "Michigan Urban Farming Initiative",
+      "coordinates": null,
+      "street_address": "7432 Brush St",
+      "street_address_2": null,
+      "city": "Detroit",
+      "zipcode": "48202",
+      "state": "MI"
+    }
+  },
+  {
+    "event_id": 1,
+    "user_id": 4,
+    "organizer_type": "profile",
+    "title": "Councilperson Sheffield Town Hall",
+    "description": "Join Council President Pro Tem Sheffield and the City Assessor for an in depth discussion on Neighborhood Enterprise Zones and what they mean to you!",
+    "start": "2019-11-21T18:00:00-0500",
+    "end": "2019-11-21T20:00:00-0500",
+    "ext_link": "https://detroitmi.gov",
+    "image": "https://detroitmi.gov/themes/custom/detroitmi/logo.png",
+    "approved": true,
+    "location": {
+      "id": 2,
+      "name": "Metropolitain United Methodist Church",
+      "coordinates": null,
+      "street_address": "8000 Woodward Ave",
+      "street_address_2": null,
+      "city": "Detroit",
+      "zipcode": "48202",
+      "state": "MI"
+    }
+  },
+]}
+```
+### Error Response
+
+User not authenticated
+
+```
+HTTP/1.1 401 UNAUTHORIZED
+{
+  "message": "Invalid credentials"
+}
+```
 
 ## Get event by id
 
