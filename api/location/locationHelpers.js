@@ -9,21 +9,30 @@ const Locations = require("./locationModel.js");
 const Users = require("../user/userModel.js");
 
 function addLocation(req, res, next) {
-  const newLocation = req.body.location || {};
 
-  Locations.add(newLocation)
-    .then(location => {
-      // console.log("passed addLoaction");
-      req.newLocation = location;
-      next();
-    })
-    .catch(err => {
-      console.log("error from addLocation middleware", err);
-      res.status(500).json({
-        message: `Error adding the location to database.`,
-        error: err.toString()
+  const newLocation = req.body.location;
+
+  if (newLocation) {
+    Locations.add(newLocation)
+      .then(location => {
+        // console.log("passed addLoaction");
+        req.newLocation = location;
+        req.body.location_id = location.id
+        delete req.body.location; // remove user submitted location object
+        next();
       })
-    });
+      .catch(err => {
+        console.log("error from addLocation middleware", err);
+        res.status(500).json({
+          message: `Error adding the location to database.`,
+          error: err.toString()
+        })
+      });
+
+  } else {
+    // newLocation undefined, move on
+    next();
+  }
 }
 
 function getOwnProfileLocation(req, res, next) {

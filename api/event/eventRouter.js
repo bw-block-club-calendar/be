@@ -6,13 +6,13 @@ const Users = require("../user/userModel.js")
 
 const restrictAuth = require('../restrictAuthMiddleware'); // requires valid token
 const restrictAdmin = require('../restrictAdminMiddleware.js'); // require admin type on decodedJwt
-const { verifyOwnEvent, 
-  addEvent, getAllEvents, getOwnEvent } = require("./eventHelpers.js");
+const { oldVerifyOwnEvent, addEvent, getAllEvents, getOwnEvent,
+  verifyOwnEvent, updateEvent } = require("./eventHelpers.js");
 const { addLocation, getOwnEventLocation } = require("../location/locationHelpers.js");
 
 router.post("/",
   restrictAuth, // restrictAuth verifies user is logged in
-  verifyOwnEvent, // verifyOwnEvent ensures decodedJwt.id matches req.user_id ? next : 401
+  oldVerifyOwnEvent, // oldVerifyOwnEvent ensures decodedJwt.id matches req.user_id ? next : 401
   // verifyCompleteEvent, // verifyCompleteEvent ensures all required fields ? next : 400
   addLocation, // addLocation adds location to DB, creates req.newLocation object
   addEvent, // addEvent adds event to DB, creates req.newEvent object w/ location FK
@@ -37,27 +37,57 @@ router.post("/",
 
 router.get('/', 
   getAllEvents,
+  // filterEventsByQuery // TODO: add query string middleware
   (req, res) => {
     const eventList = req.eventList;
-
     res.status(200).json(eventList);
 });
 
-router.get('/own', 
-  getOwnEvent, // getOwnEvent looksup your event_id, adds to req.ownEvent
-  // getOwnEventLocation, // getOwnEventLocation looks up your location_id, adds to req.ownEvent.location
+router.get('/:id',
   (req, res) => {
-    const user = req.decodedJwt;
-    res.status(200).json({
-      user_id: user.id,
-      username: user.username,
-      event: {
-        ...req.ownEvent
+    const { id } = req.params;
+    Events.findById(id)
+    .then(event => {
+      if (!event) {
+        res.status(404).json({ message: "Event with requested id is not found in database" });
       }
+      res.status(200).json(event);
     })
+    .catch(err => {
+      res.status(500).json({
+        message: `Error getting event from the database by id.`,
+        error: err.toString()
+      })
+    });
 });
 
-// TODO: router.put('/own')
+// TODO: router.get('/own')
+// router.get('/own', 
+//   getOwnEvent, // getOwnEvent looksup your event_id, adds to req.ownEvent
+//   // getOwnEventLocation, // getOwnEventLocation looks up your location_id, adds to req.ownEvent.location
+//   (req, res) => {
+//     const user = req.decodedJwt;
+//     res.status(200).json({
+//       user_id: user.id,
+//       username: user.username,
+//       event: {
+//         ...req.ownEvent
+//       }
+//     })
+// });
+
+// TODO: router.get('/:id')
+
+router.put('/:id',
+  restrictAuth, // restrictAuth verifies user is logged in
+  verifyOwnEvent,
+  addLocation,
+  updateEvent,
+  (req, res) => {
+    let updatedEvent = req.updatedEvent;
+    res.status(200).json(updatedEvent)
+  }
+)
 
 // TODO: router.del('/own')
 

@@ -12,6 +12,7 @@ const { addLocation, getOwnProfileLocation } = require("../location/locationHelp
 router.post("/",
   verifyNoProfile, // verifyNoProfile ensures the user has not created one yet ? next : 403
   verifyOwnProfile, // verifyOwnProfile ensures decodedJwt.id matches req.user_id ? next : 401
+  // remove this middleware and pull user_id from req.header.authorization for post
   addLocation, // addLocation adds location to DB, creates req.newLocation object
   addProfile, // addProfile adds profile to DB, creates req.newProfile object w/ location FK
   (req, res) => {
@@ -23,7 +24,7 @@ router.post("/",
     // update Users DB for req.user_id with FK reference to new profile
     Users.update(changes, id)
      .then(records => {
-        // update returns count of records update
+        // update returns count of records updated
         res.status(201).json({
           user_id: user.id,
           username: user.username,

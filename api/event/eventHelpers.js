@@ -1,14 +1,16 @@
 module.exports = {
-  verifyOwnEvent,
+  oldVerifyOwnEvent, // remove this middleware and pull user_id from req.header.authorization for post
   addEvent,
   getAllEvents,
-  getOwnEvent
+  getOwnEvent,
+  verifyOwnEvent,
+  updateEvent
 };
 
 const Events = require("./eventModel.js");  
 const Users = require("../user/userModel.js");
 
-function verifyOwnEvent(req, res, next) {
+function oldVerifyOwnEvent(req, res, next) {
   // decodedJwt contains user object from register or login
   const user = req.decodedJwt;
 
@@ -121,3 +123,62 @@ function getOwnEvent(req, res, next) {
       })
     });
 }
+
+
+function verifyOwnEvent(req, res, next) {
+  const { id } = req.params;
+  const user = req.decodedJwt;
+
+  console.log("id from params", id);
+  // check if user is the creator of event ? let them edit : 403
+  Events.findById(id)
+    .then(event => {
+      if (event.user_id === user.id) {
+        // add targeted event object to request
+        req.targetEvent = event;
+        next();
+      }
+      else {
+        res.status(403).json({ message: 'Can only update your own events'})
+      }
+    })
+    .catch(err => {
+      res.status(500).json({
+        message: `Error getting event from the database.`,
+        error: err.toString()
+      })
+    });
+
+}
+
+
+function updateEvent(req, res, next) {
+  const id = req.targetEvent.id;
+  const changes = req.body;
+  console.log("target event", req.targetEvent)
+  console.log("changes", changes);
+
+  Events.update(changes, id)
+    .then(records => {
+      // update returns count of records updated
+      console.log("records count", records)
+      Events.findById(id)
+        .then(updatedEvent => {
+          req.updatedEvent = updatedEvent;
+          next();
+        })
+        .catch(err => {
+          res.status(500).json({
+            message: `Update succeeded, error getting updated event from database.`,
+            error: err.toString()
+          })
+        })
+
+    })
+    .catch(err => {
+      res.status(500).json({
+        message: `Error updating the event in the database.`,
+        error: err.toString()
+      })
+    });
+}  

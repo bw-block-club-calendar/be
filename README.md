@@ -10,31 +10,28 @@ API for Block Club Calendar
 	- [Create profile](#create-profile)
 	- [Get all profiles](#get-all-profiles)
 	- [Get own profile](#get-profile-by-id)
-	- [Update profile](#update-profile)
-	- [Delete profile](#delete-profile)
+	- [(Deprecated) Update profile](#update-profile)
+	- [(Deprecated) Delete profile](#delete-profile)
   
 - [Organization](#organization)
 	- [Create organization](#create-organization)
 	- [Get all organizations](#get-all-organizations)
 	- [Get own organization](#get-own-organization)
-	- [Get organization by id](#get-organization-by-id)
-	- [Update organization](#update-organization)
-	- [Delete organization](#delete-organization)
+	- [(Deprecated) Get organization by id](#get-organization-by-id)
+	- [(Deprecated) Update organization](#update-organization)
+	- [(Deprecated) Delete organization](#delete-organization)
   
 - [Event](#event)
 	- [Create event](#create-event)
 	- [Get all events](#get-all-events)
-	- [Get own events](#get-own-events)
+	- [(Deprecated) Get own events](#get-own-events)
 	- [Get event by id](#get-event-by-id)
-	- [Get event by query](#get-event-by-query)
+	- [(Deprecated) Get event by query](#get-event-by-query)
 	- [Update event](#update-event)
 	- [Delete event](#delete-event)
   
 - [Event RSVP](#event-rsvp)
 	- [Create RSVP](#create-rsvp)
-	- [Get RSVPs by event](#get-rsvp-by-event)
-	- [Get RSVPs by user](#get-rsvp-by-user)
-  - [Delete RSVP](#delete-rsvp)
 
 # Auth
 
@@ -1056,6 +1053,53 @@ HTTP/1.1 404 NOT FOUND
 Logged in users can update their own events by id.
 Logged in administrators can update any event by id.
 
+### HTTP Request Parameters
+
+| Name           | Type       | Description                    | Constraints      | 
+|----------------|------------|--------------------------------|------------------|
+| event_id       | integer		|   Event to update   			     | Required         |
+| organizer_type | String	   	|   "profile" or "organization"  |                  |
+| title          | String	  	|   Event's title     					 |                  |
+| description    | String	  	|   Description of event      	 |                  |
+| start          | String	  	|   ISO 8601  start date & time  |                  |
+| end            | String	  	|   ISO 8601  end date & time    |                  |
+| ext_link       | String	  	|   Link to external resource 	 |                  |
+| image          | String	  	|   Link to img resource      	 |                  |
+| location       | Object	  	|   Location object  						 |                  |
+
+### Location Object Parameters
+
+| Name              | Type     | Description                    | Constraints   | 
+|-------------------|----------|------------------------------- |---------------|
+| name              | String	 |   Name of location 						|               |
+| coordinates       | String	 |   Map API coordindates         |               |
+| street_address    | String	 |   First line of street address |               |
+| street_address_2  | String 	 |   Second line of address       |               |
+| city              | String 	 |   City name                    |               |
+| zipcode           | String 	 |   zipcode                      |               |
+| state             | String 	 |   state or province            |               |
+
+### Example Request Body
+
+Example request:
+
+```
+{
+  "event_id": 2
+  "start": "Tue Oct 22 2019 19:00:00 GMT-0400 (Eastern Daylight Time)",
+  "end": "Tue Oct 22 2019 22:00:00 GMT-0400 (Eastern Daylight Time)",
+	"location": {
+    "name": "Metropolitain United Methodist Church",
+    "coordinates": null,
+    "street_address": "8000 Woodward ave",
+    "street_address_2": null,
+    "city": "Detroit",
+    "zipcode": "48202",
+    "state": "MI"
+	}
+}
+```
+
 ### Success Response
 
 Success-Response:
@@ -1106,14 +1150,14 @@ HTTP/1.1 404 NOT FOUND
 }
 ```
 
-## Delete organization
+## Delete event
 
-	DEL /api/organization/:id
+	DEL /api/event/:id
 
 ### Description and Constraints
 
-Logged in users can update delete own organization.
-Logged in administrators can delete any organization by id.
+Logged in users can update delete their own events by id.
+Logged in administrators can delete any event by id.
 
 ### Success Response
 

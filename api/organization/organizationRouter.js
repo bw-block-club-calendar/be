@@ -12,6 +12,7 @@ const { addLocation, getOwnOrganizationLocation } = require("../location/locatio
 router.post("/",
   verifyNoOrganization, // verifyNoOrganization ensures the user has not created one yet ? next : 403
   verifyOwnOrganization, // verifyOwnOrganization ensures decodedJwt.id matches req.user_id ? next : 401
+  // remove this middleware and pull user_id from req.header.authorization for post
   addLocation, // addLocation adds location to DB, creates req.newLocation object
   addOrganization, // addOrganization adds organization to DB, creates req.newOrganization object w/ location FK
   (req, res) => {
