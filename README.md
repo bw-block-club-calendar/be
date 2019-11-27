@@ -88,11 +88,6 @@ Implement a feature to allow Authenticated users to upload photos of the event t
 
 Integrate with location API to provide data on nearest events by user current location or target location search
 
-## Login user
-
-	POST /api/auth/login
-	
-
 # Auth
 
 ## Login user
