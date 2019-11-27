@@ -1,6 +1,11 @@
 # Block Club Calendar v1.0.0
 
-API for Block Club Calendar
+RESTful API developed with Express and Node for "Block Club Calendar." 
+
+- [Product Vision](#product-vision)
+	- [Mission](#mission)
+	- [Product Specification](#product-specification)
+	- [Feature Roadmap] (#feature-roadmap)
 
 - [Auth](#auth)
 	- [Login user](#login-user)
@@ -27,6 +32,66 @@ API for Block Club Calendar
   
 - [RSVP](#rsvp)
 	- [Create RSVP](#create-rsvp)
+
+
+# Product Vision
+
+## Mission
+
+Have you ever come home from work to find your neighborhood filled with cars and visitors for a local market, fair, park event, or giveaway that you didn't even know about and missed? Or made weekend plans to travel only to find out that there was a free family event in your town you missed?  BlockClub Calendar is an easy to use app that lets community members or organizations post information for upcoming neighborhood events. By using geolocation, the app lets users sign up for notifications of upcoming events happening in your area, ensuring that you never unintentionally miss a local gathering or event again!
+
+## Product Specification
+
+### User Authentication
+
+User can signup/register for an authenticated account as an Organization or a CommunityMember by providing at a minimum (Mobile, Web):
+
+    * a valid email
+    * a unique username
+    * a strong password
+    * a valid streetAddress
+    * a valid city
+    * a valid zipcode
+    * a businessName (required for business only)
+    
+### Guest Access
+
+User can use app as a guest with access limited to viewing events in their local area using geolocation. (Mobile, Web)
+
+### Event Creation
+
+Authenticated Organization or CommunityMember can read all listings in their area using geolocation. In addition, they can create, update and delete their own listings for an event. Each event must have the following properties at a minimum (Web, Mobile):
+
+    * eventTitle - String
+    * eventAddress - Address
+    * geolocation - Coordinates
+    * eventDescription - String
+    * eventStart - DateTime
+    * eventEnd - DateTime
+    * externalLink (Facebook listing for example. *Optional) - URL
+    
+### Event RSVP
+
+Authenticated CommunityMembers can confirm/unconfirm that they will be attending a particular event. (Mobile, Web)
+
+## Feature Roadmap
+
+### Calendar Integration
+
+Integrate with iCal or Google Calendar (Mobile, Web)
+
+### Media Integration
+
+Implement a feature to allow Authenticated users to upload photos of the event to the event listing. (Mobile)
+
+### Location integration
+
+Integrate with location API to provide data on nearest events by user current location or target location search
+
+## Login user
+
+	POST /api/auth/login
+	
 
 # Auth
 
