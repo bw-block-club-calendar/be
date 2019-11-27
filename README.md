@@ -5,7 +5,7 @@ RESTful API developed with Express and Node for "Block Club Calendar."
 - [Product Vision](#product-vision)
 	- [Mission](#mission)
 	- [Product Specification](#product-specification)
-	- [Feature Roadmap] (#feature-roadmap)
+	- [Feature Roadmap](#feature-roadmap)
 
 - [Auth](#auth)
 	- [Login user](#login-user)
