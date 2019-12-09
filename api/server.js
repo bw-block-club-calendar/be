@@ -56,7 +56,9 @@ server.use("/api/location",
 
 
 server.get('/', logger('root api call'), (req, res) => {
-  res.status(200).json({ api: "Block Club Calendar API running"})
+  res.status(200).json({ 
+    api: "Block Club Calendar API running",
+    message: "Use the 'api/event' endpoint to access publically available event data. All other data requires authentication, you can register for a new account at '/api/auth/register' in accordance with the documenation at '/docs'"})
 });
 
 server.get('*', logger('fallback api call'), (req, res) => {
